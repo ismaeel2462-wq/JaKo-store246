@@ -1,0 +1,4083 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>إنشاء حساب - JAKO STORE</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            background: radial-gradient(circle at top, #292929, #121212 50%, #080808);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(30, 30, 30, 0.96);
+            border: 1px solid #333;
+            border-radius: 22px;
+            padding: 35px 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.7);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #121212;
+            color: white;
+            border: 1px solid #3a3a3a;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 8px rgba(255,152,0,.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #ff9800;
+            color: #111;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #ffb52e;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #ff9800;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255,152,0,.08);
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0,200,100,.1);
+            color: #4cff9b;
+            border: 1px solid rgba(0,200,100,.2);
+        }
+
+        .error {
+            display: block;
+            background: rgba(255,50,50,.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,50,50,.2);
+        }
+
+        .login-text,
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .login-text {
+            color: #aaa;
+        }
+
+        a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #777;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-box">
+
+    <div class="logo">🎮 JAKO STORE</div>
+
+    <div class="subtitle">
+        أنشئ حسابك وابدأ بطلب خدماتك
+    </div>
+
+    <form id="registerForm">
+
+        <div class="input-group">
+            <label for="name">الاسم</label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="أدخل اسمك"
+                autocomplete="name"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="email">البريد الإلكتروني</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="example@email.com"
+                autocomplete="email"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="password">كلمة المرور</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="6 أحرف على الأقل"
+                autocomplete="new-password"
+                minlength="6"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="confirmPassword">تأكيد كلمة المرور</label>
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="أعد كتابة كلمة المرور"
+                autocomplete="new-password"
+                minlength="6"
+                required
+            >
+        </div>
+
+        <button type="submit" id="registerBtn">
+            إنشاء الحساب
+        </button>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            id="resendBtn"
+        >
+            إعادة إرسال رسالة التأكيد
+        </button>
+
+        <div id="message" class="message"></div>
+
+    </form>
+
+    <div class="login-text">
+        لديك حساب بالفعل؟
+        <a href="login.html">تسجيل الدخول</a>
+    </div>
+
+    <a href="index.html" class="back">
+        ← العودة إلى المتجر
+    </a>
+
+</div>
+
+<script>
+
+    const SUPABASE_URL =
+        "https://hhstmixtubmsueeinmgl.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_tX2-nOQPMGhcnHnelJLIFg_Ya7fygLt";
+
+    const { createClient } = supabase;
+
+    const supabaseClient = createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+    const registerForm =
+        document.getElementById("registerForm");
+
+    const nameInput =
+        document.getElementById("name");
+
+    const emailInput =
+        document.getElementById("email");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const confirmPasswordInput =
+        document.getElementById("confirmPassword");
+
+    const registerBtn =
+        document.getElementById("registerBtn");
+
+    const resendBtn =
+        document.getElementById("resendBtn");
+
+    const message =
+        document.getElementById("message");
+
+
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display = "block";
+    }
+
+
+    // ==========================================
+    // إنشاء الحساب
+    // ==========================================
+
+    registerForm.addEventListener(
+        "submit",
+        async function(e) {
+
+            e.preventDefault();
+
+            message.style.display = "none";
+
+            const name =
+                nameInput.value.trim();
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+            const password =
+                passwordInput.value;
+
+            const confirmPassword =
+                confirmPasswordInput.value;
+
+
+            if (name.length < 2) {
+
+                showMessage(
+                    "❌ يرجى إدخال اسم صحيح.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!email.includes("@")) {
+
+                showMessage(
+                    "❌ يرجى إدخال بريد إلكتروني صحيح.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (password.length < 6) {
+
+                showMessage(
+                    "❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (password !== confirmPassword) {
+
+                showMessage(
+                    "❌ كلمتا المرور غير متطابقتين.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            registerBtn.disabled = true;
+
+            registerBtn.textContent =
+                "جاري إنشاء الحساب...";
+
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient.auth.signUp({
+
+                        email: email,
+
+                        password: password,
+
+                        options: {
+
+                            data: {
+                                name: name
+                            }
+
+                        }
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                if (data && data.user) {
+
+                    registerForm.reset();
+
+                    if (data.session) {
+
+                        showMessage(
+                            "✅ تم إنشاء الحساب وتسجيل الدخول بنجاح.",
+                            "success"
+                        );
+
+                    } else {
+
+                        showMessage(
+                            "✅ تم إنشاء الحساب بنجاح.\n\n📧 تحقق من بريدك الإلكتروني واضغط على رابط تأكيد الحساب، ثم انتقل إلى تسجيل الدخول.",
+                            "success"
+                        );
+
+                    }
+
+                } else {
+
+                    showMessage(
+                        "⚠️ لم يتم إنشاء الحساب. حاول مرة أخرى.",
+                        "error"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Supabase Error:",
+                    error
+                );
+
+
+                let errorMessage =
+                    error.message || "";
+
+
+                if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    errorMessage =
+                        "⏳ تم تجاوز حد إرسال رسائل البريد الإلكتروني مؤقتًا.\n\nانتظر قليلًا قبل محاولة إنشاء حساب جديد أو إعادة إرسال رسالة التأكيد.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("user already registered")
+                ) {
+
+                    errorMessage =
+                        "⚠️ هذا البريد الإلكتروني مسجل مسبقًا.\n\nانتقل إلى صفحة تسجيل الدخول.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("invalid email")
+                ) {
+
+                    errorMessage =
+                        "❌ البريد الإلكتروني غير صحيح.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("password")
+                ) {
+
+                    errorMessage =
+                        "❌ كلمة المرور غير مقبولة.";
+
+                }
+
+                else {
+
+                    errorMessage =
+                        "❌ حدث خطأ أثناء إنشاء الحساب:\n" +
+                        errorMessage;
+
+                }
+
+
+                showMessage(
+                    errorMessage,
+                    "error"
+                );
+
+
+            } finally {
+
+                registerBtn.disabled = false;
+
+                registerBtn.textContent =
+                    "إنشاء الحساب";
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
+    // إعادة إرسال رسالة التأكيد
+    // ==========================================
+
+    resendBtn.addEventListener(
+        "click",
+        async function() {
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+
+            if (!email) {
+
+                showMessage(
+                    "❌ أدخل بريدك الإلكتروني أولًا.",
+                    "error"
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            resendBtn.disabled = true;
+
+            resendBtn.textContent =
+                "جاري الإرسال...";
+
+
+            try {
+
+                const { error } =
+                    await supabaseClient.auth.resend({
+
+                        type: "signup",
+
+                        email: email
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                showMessage(
+                    "📧 تم طلب إرسال رسالة التأكيد.\n\nتحقق من البريد الوارد ومجلد الرسائل غير المرغوب فيها.",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                if (
+                    error.message
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    showMessage(
+                        "⏳ تم تجاوز حد إرسال البريد مؤقتًا.\n\nانتظر قليلًا ثم حاول مرة أخرى.",
+                        "error"
+                    );
+
+                } else {
+
+                    showMessage(
+                        "❌ تعذر إرسال رسالة التأكيد:\n" +
+                        error.message,
+                        "error"
+                    );
+
+                }
+
+            }
+
+
+            resendBtn.disabled = false;
+
+            resendBtn.textContent =
+                "إعادة إرسال رسالة التأكيد";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن روبلوكس</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🧱 شحن روبلوكس - Roblox Robux</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل اسم حسابك في روبلوكس (Username):</label>
+            <input type="text" id="playerId" placeholder="أدخل اسم الحساب" required>
+        </div>
+        <div class="form-group">
+            <label>اختر كمية الروبوكس (Robux):</label>
+            <select id="package">
+                <option value="80 روبوكس (Robux) - 0.99$">80 روبوكس (Robux) - 0.99$</option>
+                <option value="400 روبوكس (Robux) - 5.99$">400 روبوكس (Robux) - 5.99$</option>
+                <option value="800 روبوكس (Robux) - 10.99$">800 روبوكس (Robux) - 10.99$</option>
+                <option value="1700 روبوكس (Robux) - 20.99$">1700 روبوكس (Robux) - 20.99$</option>
+                <option value="4500 روبوكس (Robux) - 51.99$">4500 روبوكس (Robux) - 51.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">جاري التحميل...</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال اسم الحساب واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن روبلوكس جديد:%0A🆔 اسم الحساب (Username): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن عملات تيك توك</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🎵 شحن عملات تيك توك - TikTok Coins</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل اسم المستخدم بدقة (TikTok Username بدون @):</label>
+            <input type="text" id="playerId" placeholder="مثال: jako_store" required>
+        </div>
+        <div class="form-group">
+            <label>اختر باقة العملات:</label>
+            <select id="package">
+                <option value="70 عملة (Coins) - 0.99$">70 عملة (Coins) - 0.99$</option>
+                <option value="350 عملة (Coins) - 5.99$">350 عملة (Coins) - 5.99$</option>
+                <option value="700 عملة (Coins) - 10.99$">700 عملة (Coins) - 10.99$</option>
+                <option value="1400 عملة (Coins) - 20.99$">1400 عملة (Coins) - 20.99$</option>
+                <option value="3500 عملة (Coins) - 51.99$">3500 عملة (Coins) - 51.99$</option>
+                <option value="7000 عملة (Coins) - 102.99$">7000 عملة (Coins) - 102.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">جاري التحميل...</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال اسم المستخدم واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن تيك توك جديد:%0A🆔 اسم المستخدم (Username): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن يلا لودو</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🎲 شحن يلا لودو - Yalla Ludo</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Player ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 10254784" required>
+        </div>
+        <div class="form-group">
+            <label>اختر باقة الماس أو الاشتراك:</label>
+            <select id="package">
+                <option value="630 ماسة (Diamonds) - 1.25$">630 ماسة (Diamonds) - 1.25$</option>
+                <option value="3350 ماسة (Diamonds) - 6.00$">3350 ماسة (Diamonds) - 6.00$</option>
+                <option value="7100 ماسة (Diamonds) - 12.00$">7100 ماسة (Diamonds) - 12.00$</option>
+                <option value="اشتراك الفارس (Knight) - 6.50$">اشتراك الفارس (Knight) - 6.50$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن يلا لودو جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن يلا لودو</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🎲 شحن يلا لودو - Yalla Ludo</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Player ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 10254784" required>
+        </div>
+        <div class="form-group">
+            <label>اختر باقة الماس أو الاشتراك:</label>
+            <select id="package">
+               <option value="630 ماسة (Diamonds) - 1.99$">630 ماسة (Diamonds) - 1.99$</option>
+               <option value="1280 ماسة (Diamonds) - 2.99$">1280 ماسة (Diamonds) - 2.99$</option>
+               <option value="3350 ماسة (Diamonds) - 5.99$">3350 ماسة (Diamonds) - 5.99$</option>
+               <option value="7100 ماسة (Diamonds) - 10.99$">7100 ماسة (Diamonds) - 10.99$</option>
+               <option value="👑 اشتراك الفارس (Knight) - 5.99$">👑 اشتراك الفارس (Knight) - 5.99$</option>
+               <option value="👑 اشتراك البارون (Baron) - 15.99$">👑 اشتراك البارون (Baron) - 15.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن يلا لودو جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن بيجو لايف</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>📱 شحن بيجو لايف - Bigo Live</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Bigo ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 12345678" required>
+        </div>
+        <div class="form-group">
+            <label>اختر باقة الماس (Diamonds):</label>
+            <select id="package">
+                <option value="42 ماسة - 1.50$">42 ماسة - 1.50$</option>
+                <option value="297 ماسة - 7.50$">297 ماسة - 7.50$</option>
+                <option value="848 ماسة - 20.99$">848 ماسة - 20.99$</option>
+                <option value="1760 ماسة - 42.99$">1760 ماسة - 42.99$</option>
+                <option value="4460 ماسة - 102.99$">4460 ماسة - 102.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن بيجو لايف جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن كلاش أوف كلانس</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>⚔️ شحن كلاش أوف كلانس - Clash of Clans</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ الهاشتاغ الخاص بقريتك (Player Tag #):</label>
+            <input type="text" id="playerId" placeholder="مثال: P98YG2LL#" oninput="this.value = this.value.toUpperCase()" required>
+
+        </div>
+        <div class="form-group">
+            <label>اختر باقة الشحن:</label>
+            <select id="package">
+               <option value="80 جوهرة (Gems) - 0.99$">80 جوهرة (Gems) - 0.99$</option>
+<option value="500 جوهرة (Gems) - 5.50$">500 جوهرة (Gems) - 5.50$</option>
+<option value="1200 جوهرة (Gems) - 10.99$">1200 جوهرة (Gems) - 10.99$</option>
+<option value="2500 جوهرة (Gems) - 20.99$">2500 جوهرة (Gems) - 20.99$</option>
+<option value="6500 جوهرة (Gems) - 51.99$">6500 جوهرة (Gems) - 51.99$</option>
+<option value="14000 جوهرة (Gems) - 102.99$">14000 جوهرة (Gems) - 102.99$</option>
+<option value="👑 التذكرة الذهبية (Gold Pass) - 7.50$">👑 التذكرة الذهبية (Gold Pass) - 7.50$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال الـ Tag واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن كلاش أوف كلانس جديد:%0A🆔 هاشتاغ القرية (Tag): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن كول أوف ديوتي</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🎮 شحن كول أوف ديوتي - Call of Duty</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Player ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 68149874523" required>
+        </div>
+        <div class="form-group">
+            <label>اختر كمية النقاط (CP):</label>
+            <select id="package">
+                <option value="80 نقطة (CP) - 1.99$">80 نقطة (CP) - 1.99$</option>
+                <option value="420 نقطة (CP) - 5.99$">420 نقطة (CP) - 5.99$</option>
+                <option value="880 نقطة (CP) - 10.99$">880 نقطة (CP) - 10.99$</option>
+                <option value="2400 نقطة (CP) - 20.99$">2400 نقطة (CP) - 20.99$</option>
+                <option value="5000 نقطة (CP) - 41.99$">5000 نقطة (CP) - 41.99$</option>
+                <option value="10000 نقطة (CP) - 82.99$">10000 نقطة (CP) - 82.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن كول أوف ديوتي جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن فري فاير</title>
+    <style>
+        /* الستايل متطابق تماماً لتوحيد مظهر الموقع */
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🔥 شحن فري فاير - Free Fire</h1>
+    
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Player ID):</label>
+<input type="text" id="playerId" placeholder="أدخل الـ ID الخاص بك (أرقام فقط)" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+
+        </div>
+
+        <div class="form-group">
+            <label>اختر كمية الجواهر:</label>
+            <select id="package">
+                <option value="100 جوهرة - 0.99$">100 جوهرة - 0.99$</option>
+<option value="210 جوهرة - 2.99$">210 جوهرة - 2.99$</option>
+<option value="530 جوهرة - 5.99$">530 جوهرة - 5.99$</option>
+<option value="1080 جوهرة - 10.99$">1080 جوهرة - 10.99$</option>
+<option value="2200 جوهرة - 20.99$">2200 جوهرة - 20.99$</option>
+<option value="📋 الاشتراك الأسبوعي (Weekly VIP) - 2.99$">📋 الاشتراك الأسبوعي (Weekly VIP) - 2.99$</option>
+<option value="📋 الاشتراك الشهري (Monthly VIP) - 8.99$">📋 الاشتراك الشهري (Monthly VIP) - 8.99$</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box">
+            <img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';">
+        </div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; 
+    const CHAM_CASH_ACCOUNT = "09xxxxxxxx"; 
+
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+
+        if (method === "شام كاش") {
+            notice.style.display = "block";
+            notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT;
+            modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block";
+            notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value;
+        const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value;
+        const gCode = document.getElementById("googleCode").value;
+
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+
+        let text = "طلب شحن فري فاير جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JAKO STORE - متجر الشحن السريع</title>
+
+    <style>
+.login-top-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    background: #ff9800;
+    color: #111;
+
+    padding: 10px 16px;
+    border-radius: 10px;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+
+    transition: 0.3s;
+    z-index: 1000;
+}
+
+.login-top-btn:hover {
+    background: #ffb52e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+}
+
+@media (max-width: 600px) {
+    .login-top-btn {
+        top: 12px;
+        right: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            background:
+                radial-gradient(circle at top, #252525 0%, #121212 45%, #080808 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* الحاوية الرئيسية */
+
+        .container {
+            width: 92%;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 35px;
+            background: rgba(25, 25, 25, 0.96);
+            border: 1px solid #333;
+            border-radius: 22px;
+            box-shadow:
+                0 15px 50px rgba(0,0,0,0.7),
+                0 0 35px rgba(255,152,0,0.05);
+        }
+
+
+        /* الهيدر */
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 900;
+            color: #ff9800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255,152,0,0.35);
+        }
+
+        .subtitle {
+            margin-top: 10px;
+            color: #999;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+
+        /* عنوان القسم */
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #ff9800;
+            font-size: 18px;
+            font-weight: bold;
+
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+
+            border-bottom: 1px solid #333;
+        }
+
+
+        /* شبكة المنتجات */
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+
+        /* بطاقة اللعبة / التطبيق */
+
+        .store-btn {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            min-height: 88px;
+
+            padding: 12px;
+
+            background: linear-gradient(
+                145deg,
+                #292929,
+                #1d1d1d
+            );
+
+            color: #fff;
+
+            border: 1px solid #363636;
+            border-radius: 14px;
+
+            text-decoration: none;
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+
+            overflow: hidden;
+        }
+
+
+        /* خط برتقالي صغير */
+
+        .store-btn::before {
+            content: "";
+
+            position: absolute;
+
+            right: 0;
+            top: 0;
+
+            width: 3px;
+            height: 100%;
+
+            background: #ff9800;
+
+            opacity: 0;
+
+            transition: 0.25s;
+        }
+
+
+        /* الصورة */
+
+        .store-btn img {
+            width: 62px;
+            height: 62px;
+
+            object-fit: cover;
+
+            border-radius: 14px;
+
+            flex-shrink: 0;
+
+            border: 1px solid #444;
+
+            background: #111;
+
+            transition: 0.25s;
+        }
+
+
+        /* معلومات المنتج */
+
+        .app-info {
+            text-align: right;
+            flex: 1;
+        }
+
+        .app-name {
+            display: block;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            margin-bottom: 6px;
+        }
+
+        .app-name-en {
+            display: block;
+
+            color: #888;
+
+            font-size: 12px;
+        }
+
+
+        /* سهم */
+
+        .arrow {
+            color: #666;
+            font-size: 20px;
+
+            transition: 0.25s;
+        }
+
+
+        /* تأثير المرور */
+
+        .store-btn:hover {
+            transform: translateY(-4px);
+
+            border-color: #ff9800;
+
+            background: linear-gradient(
+                145deg,
+                #30250f,
+                #202020
+            );
+
+            box-shadow:
+                0 10px 25px rgba(0,0,0,0.5),
+                0 0 18px rgba(255,152,0,0.12);
+        }
+
+        .store-btn:hover::before {
+            opacity: 1;
+        }
+
+        .store-btn:hover img {
+            transform: scale(1.07);
+            border-color: #ff9800;
+        }
+
+        .store-btn:hover .arrow {
+            color: #ff9800;
+            transform: translateX(-4px);
+        }
+
+
+        /* الفوتر */
+
+        .footer {
+            text-align: center;
+
+            margin-top: 40px;
+            padding-top: 20px;
+
+            border-top: 1px solid #292929;
+
+            color: #666;
+            font-size: 12px;
+        }
+
+        .footer strong {
+            color: #ff9800;
+        }
+
+
+        /* الهاتف */
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+                padding: 22px 15px;
+                margin: 20px auto;
+                border-radius: 18px;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .store-btn {
+                min-height: 82px;
+            }
+
+            .store-btn img {
+                width: 58px;
+                height: 58px;
+            }
+
+        }
+
+
+        /* الشاشات الكبيرة */
+
+        @media (min-width: 800px) {
+
+            .grid-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+    <a href="login.html" class="login-top-btn">
+    🔐 تسجيل الدخول
+</a>
+
+
+<div class="container">
+
+
+    <!-- الهيدر -->
+
+    <div class="header">
+
+        <div class="logo">
+            🎮 JAKO STORE
+        </div>
+
+        <p class="subtitle">
+            متجر الشحن السريع للألعاب والتطبيقات
+            <br>
+            اختر اللعبة أو التطبيق وابدأ طلبك بسهولة
+        </p>
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- الألعاب -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        🎮 ألعاب الجيمنج
+    </div>
+
+
+    <div class="grid-container">
+
+
+        <!-- PUBG -->
+
+        <a href="pubg.html" class="store-btn">
+
+            <img src="pubg.jpg" alt="PUBG Mobile">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    ببجي موبايل
+                </span>
+
+                <span class="app-name-en">
+                    PUBG Mobile
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Free Fire -->
+
+        <a href="freefire.html" class="store-btn">
+
+            <img src="freefire.jpg" alt="Free Fire">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    فري فاير
+                </span>
+
+                <span class="app-name-en">
+                    Free Fire
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Call of Duty -->
+
+        <a href="cod.html" class="store-btn">
+
+            <img src="cod.jpg" alt="Call of Duty">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    كول أوف ديوتي
+                </span>
+
+                <span class="app-name-en">
+                    Call of Duty
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Clash -->
+
+        <a href="clash.html" class="store-btn">
+
+            <img src="clash.jpg" alt="Clash of Clans">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    كلاش أوف كلانس
+                </span>
+
+                <span class="app-name-en">
+                    Clash of Clans
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Ludo -->
+
+        <a href="ludo.html" class="store-btn">
+
+            <img src="ludo.jpg" alt="Ludo King">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    لودو كينج
+                </span>
+
+                <span class="app-name-en">
+                    Ludo King
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- PES -->
+
+        <a href="pes.html" class="store-btn">
+
+            <img src="pes.jpg" alt="eFootball">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    إي فوتبول
+                </span>
+
+                <span class="app-name-en">
+                    eFootball
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Roblox -->
+
+        <a href="roblox.html" class="store-btn">
+
+            <img src="roblox.jpg" alt="Roblox">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    روبلوكس
+                </span>
+
+                <span class="app-name-en">
+                    Roblox Robux
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- التطبيقات -->
+    <!-- ========================= -->
+
+    <div class="section-title">
+        📱 تطبيقات الدردشة واللايف
+    </div>
+
+
+    <div class="grid-container">
+
+
+        <!-- TikTok -->
+
+        <a href="tiktok.html" class="store-btn">
+
+            <img src="tiktok.jpg" alt="TikTok">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    تيك توك
+                </span>
+
+                <span class="app-name-en">
+                    TikTok Coins
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Poppo -->
+
+        <a href="poppo.html" class="store-btn">
+
+            <img src="poppo.jpg" alt="Poppo Live">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    بوبو لايف
+                </span>
+
+                <span class="app-name-en">
+                    Poppo Live
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Bigo -->
+
+        <a href="bigo.html" class="store-btn">
+
+            <img src="bigo.jpg" alt="Bigo Live">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    بيجو لايف
+                </span>
+
+                <span class="app-name-en">
+                    Bigo Live
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- YaAhlan -->
+
+        <a href="yaahlan.html" class="store-btn">
+
+            <img src="yaahlan.jpg" alt="YaAhlan">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    يا أهلاً
+                </span>
+
+                <span class="app-name-en">
+                    YaAhlan
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Yalla -->
+
+        <a href="yalla.html" class="store-btn">
+
+            <img src="yalla.jpg" alt="Yalla Ludo">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    يلا لودو
+                </span>
+
+                <span class="app-name-en">
+                    Yalla Ludo
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Tango -->
+
+        <a href="tango.html" class="store-btn">
+
+            <img src="tango.jpg" alt="Tango Live">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    تانجو
+                </span>
+
+                <span class="app-name-en">
+                    Tango Live
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+
+        <!-- Mico -->
+
+        <a href="mico.html" class="store-btn">
+
+            <img src="mico.jpg" alt="Mico">
+
+            <div class="app-info">
+
+                <span class="app-name">
+                    ميكو لايف
+                </span>
+
+                <span class="app-name-en">
+                    Mico Coins
+                </span>
+
+            </div>
+
+            <span class="arrow">
+                ‹
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- الفوتر -->
+
+    <div class="footer">
+
+        جميع الحقوق محفوظة ©
+        <strong>JAKO STORE</strong>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>تسجيل الدخول - JAKO STORE</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Tahoma, sans-serif;
+            background: radial-gradient(circle at top, #292929, #121212 50%, #080808);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(30, 30, 30, 0.96);
+            border: 1px solid #333;
+            border-radius: 22px;
+            padding: 35px 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,.7);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #121212;
+            color: white;
+            border: 1px solid #3a3a3a;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 8px rgba(255,152,0,.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #ff9800;
+            color: #111;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #ffb52e;
+        }
+
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid #444;
+            color: #ff9800;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .secondary-btn:hover {
+            background: rgba(255,152,0,.08);
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .success {
+            display: block;
+            background: rgba(0,200,100,.1);
+            color: #4cff9b;
+            border: 1px solid rgba(0,200,100,.2);
+        }
+
+        .error {
+            display: block;
+            background: rgba(255,50,50,.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,50,50,.2);
+        }
+
+        .register-text,
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .register-text {
+            color: #aaa;
+        }
+
+        a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back {
+            color: #777;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <div class="logo">🎮 JAKO STORE</div>
+
+    <div class="subtitle">
+        سجل دخولك لإرسال طلباتك
+    </div>
+
+    <form id="loginForm">
+
+        <div class="input-group">
+            <label for="email">البريد الإلكتروني</label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="example@email.com"
+                autocomplete="email"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <label for="password">كلمة المرور</label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="أدخل كلمة المرور"
+                autocomplete="current-password"
+                required
+            >
+        </div>
+
+        <button type="submit" id="loginBtn">
+            تسجيل الدخول
+        </button>
+
+        <button
+            type="button"
+            class="secondary-btn"
+            id="forgotBtn"
+        >
+            نسيت كلمة المرور؟
+        </button>
+
+        <div id="message" class="message"></div>
+
+    </form>
+
+    <div class="register-text">
+        ليس لديك حساب؟
+        <a href="register.html">إنشاء حساب جديد</a>
+    </div>
+
+    <a href="index.html" class="back">
+        ← العودة إلى المتجر
+    </a>
+
+</div>
+
+<script>
+
+    const SUPABlASE_URL =
+        "https://anfpisxylmvclheoehnh.supabase.co";
+
+    const SUPABASE_KEY =
+        "sb_publishable_B9JjVM8dQpDnOOMaK_QIKg_kXlud85S";
+
+
+    const { createClient } = supabase;
+
+const supabaseClient = createClient(
+    "https://anfpisxylmvclheoehnh.supabase.co",
+    "sb_publishable_B9JjVM8dQpDnOOMaK_QIKg_kXlud85S"
+);
+
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    const emailInput =
+        document.getElementById("email");
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const loginBtn =
+        document.getElementById("loginBtn");
+
+    const forgotBtn =
+        document.getElementById("forgotBtn");
+
+    const message =
+        document.getElementById("message");
+
+
+    function showMessage(text, type) {
+
+        message.textContent = text;
+
+        message.className =
+            "message " + type;
+
+        message.style.display = "block";
+    }
+
+
+    // ==========================================
+    // تسجيل الدخول
+    // ==========================================
+
+    loginForm.addEventListener(
+        "submit",
+        async function(e) {
+
+            e.preventDefault();
+
+            message.style.display = "none";
+
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+            const password =
+                passwordInput.value;
+
+
+            if (!email || !password) {
+
+                showMessage(
+                    "❌ أدخل البريد الإلكتروني وكلمة المرور.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            loginBtn.disabled = true;
+
+            loginBtn.textContent =
+                "جاري تسجيل الدخول...";
+
+
+            try {
+
+                const { data, error } =
+                    await supabaseClient.auth.signInWithPassword({
+
+                        email: email,
+
+                        password: password
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                if (!data.session) {
+
+                    showMessage(
+                        "❌ لم يتم إنشاء جلسة تسجيل الدخول.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                showMessage(
+                    "✅ تم تسجيل الدخول بنجاح!",
+                    "success"
+                );
+
+
+                /*
+                    إذا كان المستخدم جاء من صفحة منتج
+                    سيتم إعادته إليها.
+                */
+
+                const returnPage =
+                    localStorage.getItem("returnAfterLogin");
+
+
+                setTimeout(function() {
+
+                    if (returnPage) {
+
+                        localStorage.removeItem(
+                            "returnAfterLogin"
+                        );
+
+                        window.location.href =
+                            returnPage;
+
+                    } else {
+
+                        window.location.href =
+                            "index.html";
+
+                    }
+
+                }, 800);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                let errorMessage =
+                    error.message || "";
+
+
+                if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("invalid login credentials")
+                ) {
+
+                    errorMessage =
+                        "❌ البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("email not confirmed")
+                ) {
+
+                    errorMessage =
+                        "📧 يجب تأكيد البريد الإلكتروني أولًا.\n\nافتح رسالة التأكيد التي أرسلها Supabase إلى بريدك الإلكتروني.";
+
+                }
+
+                else if (
+                    errorMessage
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    errorMessage =
+                        "⏳ تم تجاوز حد المحاولات مؤقتًا.\n\nانتظر قليلًا ثم حاول مرة أخرى.";
+
+                }
+
+                else {
+
+                    errorMessage =
+                        "❌ حدث خطأ أثناء تسجيل الدخول:\n" +
+                        errorMessage;
+
+                }
+
+
+                showMessage(
+                    errorMessage,
+                    "error"
+                );
+
+            }
+
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+                "تسجيل الدخول";
+
+        }
+    );
+
+
+    // ==========================================
+    // نسيت كلمة المرور
+    // ==========================================
+
+    forgotBtn.addEventListener(
+        "click",
+        async function() {
+
+            const email =
+                emailInput.value.trim().toLowerCase();
+
+
+            if (!email) {
+
+                showMessage(
+                    "📧 أدخل بريدك الإلكتروني أولًا، ثم اضغط على «نسيت كلمة المرور؟».",
+                    "error"
+                );
+
+                emailInput.focus();
+
+                return;
+            }
+
+
+            forgotBtn.disabled = true;
+
+            forgotBtn.textContent =
+                "جاري الإرسال...";
+
+
+            try {
+
+                const redirectUrl =
+                    window.location.origin +
+                    window.location.pathname
+                        .replace(
+                            "login.html",
+                            "reset-password.html"
+                        );
+
+
+                const { error } =
+                    await supabaseClient.auth
+                        .resetPasswordForEmail(
+                            email,
+                            {
+                                redirectTo: redirectUrl
+                            }
+                        );
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                showMessage(
+                    "📧 تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.\n\nتحقق من البريد الوارد ومجلد الرسائل غير المرغوب فيها.",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                if (
+                    error.message
+                    .toLowerCase()
+                    .includes("rate limit")
+                ) {
+
+                    showMessage(
+                        "⏳ تم تجاوز حد إرسال البريد مؤقتًا.\n\nانتظر قليلًا قبل المحاولة مرة أخرى.",
+                        "error"
+                    );
+
+                } else {
+
+                    showMessage(
+                        "❌ تعذر إرسال رابط إعادة تعيين كلمة المرور:\n" +
+                        error.message,
+                        "error"
+                    );
+
+                }
+
+            }
+
+
+            forgotBtn.disabled = false;
+
+            forgotBtn.textContent =
+                "نسيت كلمة المرور؟";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن لودو كينج</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; transition: 0.3s; }
+        .btn-submit:hover { background: #1ebd58; }
+        
+        /* ستايل نافذة الباركود المنبثقة */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🎲 شحن لودو كينج - Ludo King</h1>
+    
+    <form id="orderForm">
+        <!-- 1. إدخال المعرف ID -->
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (Player ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 4521487" required>
+        </div>
+
+        <!-- 2. فئات الشحن المستقلة للودو كينج -->
+        <div class="form-group">
+            <label>اختر باقة الشحن المطلوبة:</label>
+            <select id="package">
+                <optgroup label="💰 قطع نقدية (Coins)">
+    <option value="50,000 قطعة نقدية - 0.99$">50,000 قطعة نقدية - 0.99$</option>
+    <option value="250,000 قطعة نقدية - 3.99$">250,000 قطعة نقدية - 3.99$</option>
+    <option value="500,000 قطعة نقدية - 5.99$">500,000 قطعة نقدية - 5.99$</option>
+    <option value="1,000,000 قطعة نقدية - 9.99$">1,000,000 قطعة نقدية - 9.99$</option>
+    <option value="5,000,000 قطعة نقدية - 41.99$">5,000,000 قطعة نقدية - 41.99$</option>
+</optgroup>
+<optgroup label="💎 جواهر (Diamonds)">
+    <option value="50 جوهرة - 0.99$">50 جوهرة - 0.99$</option>
+    <option value="250 جوهرة - 5.99$">250 جوهرة - 5.99$</option>
+    <option value="500 جوهرة - 9.99$">500 جوهرة - 9.99$</option>
+    <option value="2500 جوهرة - 41.99$">2500 جوهرة - 41.99$</option>
+</optgroup>
+            </select>
+        </div>
+
+        <!-- 3. طريقة الدفع -->
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+
+        <!-- 4. حقل كود بطاقة جوجل بلاي -->
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي المكون من 16 رمزاً:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الكود هنا">
+        </div>
+
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+
+<!-- النافذة المنبثقة للباركود الخاص بشام كاش -->
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        
+        <div class="qrcode-box">
+            <img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';">
+        </div>
+        
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <p style="font-size: 12px; color: #aaa;">يرجى تصوير إشعار التحويل لإرفاقه في محادثة الواتساب.</p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+
+<script>
+    // ⚠️ ضع رقم واتسابك ورقم شام كاش الفعليين هنا
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; 
+    const CHAM_CASH_ACCOUNT = "09xxxxxxxx"; 
+
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+
+        notice.style.display = "none";
+        googleGroup.style.display = "none";
+        modal.style.display = "none";
+
+        if (method === "شام كاش") {
+            notice.style.display = "block";
+            notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT;
+            modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block";
+            notice.style.display = "block";
+            notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+
+    function closePopup() {
+        document.getElementById("qrModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById("qrModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value;
+        const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value;
+        const gCode = document.getElementById("googleCode").value;
+
+        if (!id || !method) {
+            alert("الرجاء إدخال الـ ID واختيار طريقة الدفع أولاً!");
+            return;
+        }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) {
+            alert("الرجاء إدخال كود بطاقة جوجل بلاي!");
+            return;
+        }
+
+        let text = "طلب شحن لودو كينج جديد:%0A" +
+                   "🆔 المعرّف (ID): " + id + "%0A" +
+                   "📦 الفئة المحددة: " + pkg + "%0A" +
+                   "💳 الدفع عن طريق: " + method;
+
+        if (method === "بطاقات جوجل بلاي") {
+            text += "%0A" + "🔑 كود البطاقة: " + gCode;
+        } else if (method === "شام كاش") {
+            text += "%0A" + "📸 (سأقوم بإرفاق صورة إشعار التحويل عبر المحادثة)";
+        }
+
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن ميكو لايف</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>🔮 شحن ميكو لايف - Mico Coins</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (أرقام فقط):</label>
+            <input type="text" id="playerId" placeholder="مثال: 4125874" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+        </div>
+        <div class="form-group">
+            <label>اختر باقة عملات ميكو (Coins):</label>
+            <select id="package">
+                <option value="70 عملة (Coins) - 0.99$">70 عملة (Coins) - 0.99$</option>
+                <option value="350 عملة (Coins) - 5.99$">350 عملة (Coins) - 5.99$</option>
+                <option value="700 عملة (Coins) - 10.99$">700 عملة (Coins) - 10.99$</option>
+                <option value="3500 عملة (Coins) - 52.99$">3500 عملة (Coins) - 52.99$</option>
+                <option value="7000 عملة (Coins) - 102.99$">7000 عملة (Coins) - 102.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">جاري التحميل...</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (id.length < 5 || id.length > 12) { alert("❌ خطأ: الـ ID غير منطقي!"); return; }
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن ميكو لايف جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن بيس موبايل</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>⚽ شحن إي فوتبول - eFootball PES</h1>
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (أرقام فقط):</label>
+            <input type="text" id="playerId" placeholder="أدخل معرّف اللاعب" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+        </div>
+        <div class="form-group">
+            <label>اختر باقة الكوينز (Coins):</label>
+            <select id="package">
+                <option value="100 كوينز (Coins) - 0.99$">100 كوينز (Coins) - 0.99$</option>
+                <option value="500 كوينز (Coins) - 5.99$">500 كوينز (Coins) - 5.99$</option>
+                <option value="1000 كوينز (Coins) - 10.99$">1000 كوينز (Coins) - 10.99$</option>
+                <option value="2100 كوينز (Coins) - 20.99$">2100 كوينز (Coins) - 20.99$</option>
+                <option value="5700 كوينز (Coins) - 50.99$">5700 كوينز (Coins) - 50.99$</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box"><img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';"></div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">جاري التحميل...</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; const CHAM_CASH_ACCOUNT = "09xxxxxxxx";
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+        if (method === "شام كاش") {
+            notice.style.display = "block"; notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT; modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block"; notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value; const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value; const gCode = document.getElementById("googleCode").value;
+        if (id.length < 7 || id.length > 12) { alert("❌ خطأ: الـ ID غير صحيح (يجب أن يتكون من 7 إلى 12 رقماً)!"); return; }
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+        let text = "طلب شحن بيس موبايل جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAKO STORE - شحن بوبو لايف</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; text-align: center; padding: 20px; }
+        .container { max-width: 500px; margin: 0 auto; background: #1e1e1e; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.8); }
+        h1 { color: #ff9800; font-size: 24px; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #ff9800; }
+        select, input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #2a2a2a; color: #fff; box-sizing: border-box; font-size: 14px; }
+        select:focus, input:focus { border-color: #ff9800; outline: none; }
+        .notice { background: #332200; border: 1px solid #ff9800; padding: 12px; border-radius: 6px; font-size: 13px; margin-top: 10px; display: none; color: #ffb74d; }
+        .btn-submit { background: #25d366; color: #fff; font-size: 18px; font-weight: bold; padding: 14px; border: none; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 20px; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; }
+        .modal-content { background-color: #2a2a2a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; border: 1px solid #ff9800; position: relative; }
+        .close-icon { position: absolute; top: 10px; left: 15px; color: #aaa; font-size: 24px; cursor: pointer; }
+        .qrcode-box { width: 220px; height: 220px; margin: 15px auto; border: 2px dashed #ff9800; background: #1a1a1a; display: flex; align-items: center; justify-content: center; }
+        .qrcode-img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-close { background: #ff9800; color: #121212; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- زر الرجوع إلى الواجهة الرئيسية -->
+<div style="text-align: right; margin-bottom: 20px;">
+    <a href="index.html" style="background: #2a2a2a; color: #ff9800; border: 1px solid #ff9800; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: bold; transition: 0.3s; display: inline-block;">
+        ⬅️
+    </a>
+</div>
+    <h1>📱 شحن تطبيق بوبو لايف - Poppo Live</h1>
+    
+    <form id="orderForm">
+        <div class="form-group">
+            <label>أدخل الـ ID الخاص بك (User ID):</label>
+            <input type="text" id="playerId" placeholder="مثال: 9876543" required>
+        </div>
+
+        <div class="form-group">
+            <label>اختر باقة النقاط/العملات:</label>
+            <select id="package">
+                <option value="10,000 عملة - 1.50$">10,000 عملة - 1.50$</option>
+                <option value="50,000 عملة - 5.99$">50,000 عملة - 5.99$</option>
+                <option value="100,000 عملة - 10.99$">100,000 عملة - 10.99$</option>
+                <option value="500,000 عملة - 50.99$">500,000 عملة - 50.99$</option>
+                <option value="1,000,000 عملة - 102.99$">1,000,000 عملة - 102.99$</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>طريقة الدفع:</label>
+            <select id="paymentMethod" onchange="handlePaymentChange()">
+                <option value="">-- اختر طريقة الدفع --</option>
+                <option value="شام كاش">شام كاش (Cham Cash)</option>
+                <option value="بطاقات جوجل بلاي">بطاقة جوجل بلاي (Google Play)</option>
+            </select>
+            <div id="paymentNotice" class="notice"></div>
+        </div>
+
+        <div class="form-group" id="googleCodeGroup" style="display: none;">
+            <label>أدخل كود بطاقة جوجل بلاي:</label>
+            <input type="text" id="googleCode" placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة">
+        </div>
+
+        <button type="button" class="btn-submit" onclick="redirectToWhatsApp()">إرسال الطلب عبر الواتساب 💬</button>
+    </form>
+</div>
+
+<div id="qrModal" class="modal">
+    <div class="modal-content">
+        <span class="close-icon" onclick="closePopup()">&times;</span>
+        <h3>📲 مسح باركود شام كاش</h3>
+        <p>قم بمسح الكود أدناه لإرسال الأموال:</p>
+        <div class="qrcode-box">
+            <img src="qr-code.png" alt="[ضع صورتك باسم qr-code.png هنا]" class="qrcode-img" onerror="this.style.display='none';">
+        </div>
+        <p style="font-size: 15px; color: #ccc;">رقم الحساب: <strong style="color:#ff9800;" id="accountNum">09xxxxxxxx</strong></p>
+        <button class="btn-close" onclick="closePopup()">موافق، تم التحويل</button>
+    </div>
+</div>
+
+<script>
+    const WHATSAPP_NUMBER = "9639xxxxxxxx"; 
+    const CHAM_CASH_ACCOUNT = "09xxxxxxxx"; 
+
+    function handlePaymentChange() {
+        const method = document.getElementById("paymentMethod").value;
+        const notice = document.getElementById("paymentNotice");
+        const googleGroup = document.getElementById("googleCodeGroup");
+        const modal = document.getElementById("qrModal");
+
+        notice.style.display = "none"; googleGroup.style.display = "none"; modal.style.display = "none";
+
+        if (method === "شام كاش") {
+            notice.style.display = "block";
+            notice.innerHTML = "🎯 تم فتح نافذة باركود شام كاش، يرجى إتمام التحويل.";
+            document.getElementById("accountNum").innerText = CHAM_CASH_ACCOUNT;
+            modal.style.display = "flex"; 
+        } else if (method === "بطاقات جوجل بلاي") {
+            googleGroup.style.display = "block"; notice.style.display = "block";
+            notice.innerHTML = "💳 يرجى كتابة كود البطاقة بالأسفل بدقة.";
+        }
+    }
+
+    function closePopup() { document.getElementById("qrModal").style.display = "none"; }
+
+    function redirectToWhatsApp() {
+        const id = document.getElementById("playerId").value;
+        const pkg = document.getElementById("package").value;
+        const method = document.getElementById("paymentMethod").value;
+        const gCode = document.getElementById("googleCode").value;
+
+        if (!id || !method) { alert("الرجاء إدخال الـ ID واختيار طريقة الدفع!"); return; }
+        if (method === "بطاقات جوجل بلاي" && !gCode.trim()) { alert("الرجاء إدخال كود بطاقة جوجل بلاي!"); return; }
+
+        let text = "طلب شحن بوبو لايف جديد:%0A🆔 المعرّف (ID): " + id + "%0A📦 الفئة: " + pkg + "%0A💳 الدفع عن طريق: " + method;
+        if (method === "بطاقات جوجل بلاي") text += "%0A🔑 كود البطاقة: " + gCode;
+        window.open("https://wa.me" + WHATSAPP_NUMBER + "?text=" + text, '_blank');
+    }
+</script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JAKO STORE - شحن ببجي موبايل</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        h1 {
+            color: #ff9800;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #ff9800;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #ff9800;
+            outline: none;
+        }
+
+        .notice {
+            background: #332200;
+            border: 1px solid #ff9800;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+            color: #ffb74d;
+        }
+
+        .btn-submit {
+            background: #25d366;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover {
+            background: #20bd5a;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #ff9800;
+            position: relative;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .qrcode-box {
+            width: 220px;
+            height: 220px;
+            margin: 15px auto;
+            border: 2px dashed #ff9800;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qrcode-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .btn-close {
+            background: #ff9800;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn-close:hover {
+            background: #ffb52e;
+        }
+
+        .cancel-btn {
+            background: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .cancel-btn:hover {
+            background: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- زر الرجوع -->
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="index.html"
+           style="background: #2a2a2a;
+                  color: #ff9800;
+                  border: 1px solid #ff9800;
+                  padding: 8px 16px;
+                  border-radius: 6px;
+                  text-decoration: none;
+                  font-size: 14px;
+                  font-weight: bold;
+                  display: inline-block;">
+            ⬅️
+        </a>
+    </div>
+
+    <h1>🎮 شحن ببجي موبايل - PUBG Mobile</h1>
+
+    <form id="orderForm">
+
+        <!-- ID -->
+        <div class="form-group">
+
+            <label>
+                أدخل الـ ID الخاص بك (Player ID):
+            </label>
+
+            <input
+                type="text"
+                id="playerId"
+                placeholder="أدخل الـ ID الخاص بك (أرقام فقط)"
+                inputmode="numeric"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                required
+            >
+
+        </div>
+
+
+        <!-- الباقة -->
+        <div class="form-group">
+
+            <label>
+                اختر كمية الشدات (UC):
+            </label>
+
+            <select id="package">
+
+                <option value="60 شدة (UC) - 1.99$">
+                    60 شدة (UC) - 1.99$
+                </option>
+
+                <option value="325 شدة (UC) - 5.99$">
+                    325 شدة (UC) - 5.99$
+                </option>
+
+                <option value="660 شدة (UC) - 10.99$">
+                    660 شدة (UC) - 10.99$
+                </option>
+
+                <option value="1800 شدة (UC) - 26.99$">
+                    1800 شدة (UC) - 26.99$
+                </option>
+
+                <option value="3850 شدة (UC) - 52.99$">
+                    3850 شدة (UC) - 52.99$
+                </option>
+
+                <option value="8100 شدة (UC) - 103.99$">
+                    8100 شدة (UC) - 103.99$
+                </option>
+
+                <option value="🎫 الرويال باس العادي (Elite Pass) - 6.99$">
+                    🎫 الرويال باس العادي (Elite Pass) - 6.99$
+                </option>
+
+                <option value="👑 الرويال باس البلس (Elite Plus) - 15.99$">
+                    👑 الرويال باس البلس (Elite Plus) - 15.99$
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- طريقة الدفع -->
+        <div class="form-group">
+
+            <label>
+                طريقة الدفع:
+            </label>
+
+            <select
+                id="paymentMethod"
+                onchange="handlePaymentChange()">
+
+                <option value="">
+                    -- اختر طريقة الدفع --
+                </option>
+
+                <option value="شام كاش">
+                    شام كاش (Cham Cash)
+                </option>
+
+                <option value="بطاقات جوجل بلاي">
+                    بطاقة جوجل بلاي (Google Play)
+                </option>
+
+            </select>
+
+            <div
+                id="paymentNotice"
+                class="notice">
+            </div>
+
+        </div>
+
+
+        <!-- كود جوجل بلاي -->
+        <div
+            class="form-group"
+            id="googleCodeGroup"
+            style="display: none;">
+
+            <label>
+                أدخل كود بطاقة جوجل بلاي:
+            </label>
+
+            <input
+                type="text"
+                id="googleCode"
+                placeholder="أدخل الـ 16 رمزاً الخاص بالبطاقة"
+            >
+
+        </div>
+
+
+        <!-- إرسال الطلب -->
+        <button
+            type="button"
+            class="btn-submit"
+            onclick="redirectToWhatsApp()">
+
+            إرسال الطلب عبر الواتساب 💬
+
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- نافذة شام كاش -->
+<div id="qrModal" class="modal">
+
+    <div class="modal-content">
+
+        <span
+            class="close-icon"
+            onclick="closePopup()">
+
+            &times;
+
+        </span>
+
+
+        <h3>
+            📲 تحويل عبر شام كاش
+        </h3>
+
+
+        <p>
+            قم بتحويل المبلغ إلى الحساب التالي:
+        </p>
+
+
+        <!-- QR -->
+        <div class="qrcode-box">
+
+            <img
+                src="qr-code.png"
+                alt="QR Code"
+                class="qrcode-img"
+                onerror="this.style.display='none';"
+            >
+
+        </div>
+
+
+        <p style="font-size:15px; color:#ccc;">
+
+            رقم الحساب:
+
+            <strong
+                style="color:#ff9800;"
+                id="accountNum">
+
+                0976567876
+
+            </strong>
+
+        </p>
+
+
+        <p style="color:#ffb74d; font-size:13px;">
+
+            بعد إتمام التحويل اضغط على الزر أدناه
+            لإرسال تفاصيل الطلب عبر واتساب.
+
+        </p>
+
+
+        <!-- تأكيد التحويل -->
+        <button
+            class="btn-close"
+            onclick="confirmChamCash()">
+
+            ✅ موافق، تم التحويل وإرسال الطلب
+
+        </button>
+
+
+        <button
+            class="cancel-btn"
+            onclick="closePopup()">
+
+            إلغاء
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // ==========================================
+    // إعداد Supabase
+    // ==========================================
+
+    const SUPABASE_URL =
+        "https://hhstmixtubmsueeinmgl.supabase.co";
+
+
+    // ضع هنا نفس Publishable Key الموجود
+    // في login.html و register.html
+
+    const SUPABASE_KEY =
+        "sb_publishable_tX2-nOQPMGhcnHnelJLIFg_Ya7fygLt";
+
+
+    const { createClient } = supabase;
+
+
+    const supabaseClient =
+        createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    // ==========================================
+    // بيانات المتجر
+    // ==========================================
+
+    const WHATSAPP_NUMBER =
+        "963982704754";
+
+
+    const CHAM_CASH_ACCOUNT =
+        "0976567876";
+
+
+    // ==========================================
+    // التحقق من تسجيل الدخول
+    // ==========================================
+
+    async function checkLogin() {
+
+        const {
+            data: { session }
+        } = await supabaseClient.auth.getSession();
+
+
+        return session;
+
+    }
+
+
+    // ==========================================
+    // التعامل مع طريقة الدفع
+    // ==========================================
+
+    function handlePaymentChange() {
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        const notice =
+            document.getElementById("paymentNotice");
+
+
+        const googleGroup =
+            document.getElementById("googleCodeGroup");
+
+
+        const modal =
+            document.getElementById("qrModal");
+
+
+        notice.style.display = "none";
+
+        googleGroup.style.display = "none";
+
+        modal.style.display = "none";
+
+
+        // شام كاش
+        if (method === "شام كاش") {
+
+            notice.style.display = "block";
+
+
+            notice.innerHTML =
+                "💰 تم اختيار شام كاش. يرجى إتمام التحويل من خلال النافذة.";
+
+
+            document.getElementById("accountNum").innerText =
+                CHAM_CASH_ACCOUNT;
+
+
+            modal.style.display = "flex";
+
+        }
+
+
+        // Google Play
+        else if (method === "بطاقات جوجل بلاي") {
+
+            googleGroup.style.display = "block";
+
+
+            notice.style.display = "block";
+
+
+            notice.innerHTML =
+                "💳 يرجى كتابة كود بطاقة جوجل بلاي بالأسفل بدقة.";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // إغلاق نافذة شام كاش
+    // ==========================================
+
+    function closePopup() {
+
+        document.getElementById("qrModal").style.display =
+            "none";
+
+    }
+
+
+    // ==========================================
+    // تأكيد شام كاش
+    // ==========================================
+
+    async function confirmChamCash() {
+
+        // التحقق من تسجيل الدخول
+        const session =
+            await checkLogin();
+
+
+        if (!session) {
+
+            closePopup();
+
+
+            alert(
+                "🔐 يجب تسجيل الدخول أولًا لإرسال الطلب."
+            );
+
+
+            // حفظ الصفحة الحالية
+            localStorage.setItem(
+                "returnAfterLogin",
+                window.location.href
+            );
+
+
+            // الذهاب لتسجيل الدخول
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        if (method !== "شام كاش") {
+
+            closePopup();
+
+            return;
+
+        }
+
+
+        closePopup();
+
+
+        sendWhatsAppOrder();
+
+    }
+
+
+    // ==========================================
+    // زر إرسال الطلب
+    // ==========================================
+
+    async function redirectToWhatsApp() {
+
+        // التحقق من تسجيل الدخول
+        const session =
+            await checkLogin();
+
+
+        if (!session) {
+
+            alert(
+                "🔐 يجب تسجيل الدخول أولًا لإرسال الطلب."
+            );
+
+
+            // حفظ الصفحة الحالية
+            localStorage.setItem(
+                "returnAfterLogin",
+                window.location.href
+            );
+
+
+            // الذهاب إلى صفحة تسجيل الدخول
+            window.location.href =
+                "login.html";
+
+
+            return;
+
+        }
+
+
+        const id =
+            document.getElementById("playerId").value.trim();
+
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        // التحقق من البيانات
+        if (!id || !method) {
+
+            alert(
+                "الرجاء إدخال الـ ID واختيار طريقة الدفع!"
+            );
+
+
+            return;
+
+        }
+
+
+        // شام كاش
+        if (method === "شام كاش") {
+
+            document.getElementById("qrModal").style.display =
+                "flex";
+
+
+            return;
+
+        }
+
+
+        // Google Play
+        if (method === "بطاقات جوجل بلاي") {
+
+            const gCode =
+                document.getElementById("googleCode").value.trim();
+
+
+            if (!gCode) {
+
+                alert(
+                    "الرجاء إدخال كود بطاقة جوجل بلاي!"
+                );
+
+
+                return;
+
+            }
+
+        }
+
+
+        // إرسال الطلب
+        sendWhatsAppOrder();
+
+    }
+
+
+    // ==========================================
+    // إنشاء رسالة واتساب
+    // ==========================================
+
+    function sendWhatsAppOrder() {
+
+        const id =
+            document.getElementById("playerId").value.trim();
+
+
+        const pkg =
+            document.getElementById("package").value;
+
+
+        const method =
+            document.getElementById("paymentMethod").value;
+
+
+        const gCode =
+            document.getElementById("googleCode").value.trim();
+
+
+        let message =
+`🎮 طلب شحن ببجي موبايل جديد
+
+🆔 Player ID: ${id}
+
+📦 الباقة:
+${pkg}
+
+💳 طريقة الدفع:
+${method}`;
+
+
+        // إضافة كود Google Play
+        if (method === "بطاقات جوجل بلاي") {
+
+            message +=
+`\n\n🔑 كود بطاقة جوجل بلاي:
+${gCode}`;
+
+        }
+
+
+        // إنشاء رابط واتساب
+        const whatsappURL =
+            "https://wa.me/" +
+            WHATSAPP_NUMBER +
+            "?text=" +
+            encodeURIComponent(message);
+
+
+        // فتح واتساب
+        window.open(
+            whatsappURL,
+            "_blank"
+        );
+
+    }
+
+
+    // ==========================================
+    // إغلاق النافذة عند الضغط خارجها
+    // ==========================================
+
+    window.onclick = function(event) {
+
+        const modal =
+            document.getElementById("qrModal");
+
+
+        if (event.target === modal) {
+
+            closePopup();
+
+        }
+
+    };
+
+</script>
+
+</body>
+</html>
